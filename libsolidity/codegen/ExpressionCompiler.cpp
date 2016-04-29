@@ -1299,7 +1299,7 @@ void ExpressionCompiler::appendOrdinaryBinaryOperatorCode(Token::Value _operator
 	else if (Token::isBitOp(_operator))
 		appendBitOperatorCode(_operator);
 	else if (Token::isShiftOp(_operator))
-		appendShiftOperatorCode(_operator);
+		appendShiftOperatorCode(_operator, _type);
 	else
 		BOOST_THROW_EXCEPTION(InternalCompilerError() << errinfo_comment("Unknown binary operator."));
 }
@@ -1362,15 +1362,18 @@ void ExpressionCompiler::appendBitOperatorCode(Token::Value _operator)
 	}
 }
 
-void ExpressionCompiler::appendShiftOperatorCode(Token::Value _operator)
+void ExpressionCompiler::appendShiftOperatorCode(Token::Value _operator, Type const& _type)
 {
+	IntegerType const& type = dynamic_cast<IntegerType const&>(_type);
+	bool const c_isSigned = type.isSigned();
+
 	switch (_operator)
 	{
 	case Token::SHL:
 		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::MUL;
 		break;
 	case Token::SAR:
-		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::DIV;
+		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << (c_isSigned ? Instruction::SDIV : Instruction::DIV);
 		break;
 	case Token::SHR:
 		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::DIV;
