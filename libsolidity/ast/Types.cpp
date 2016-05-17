@@ -639,6 +639,7 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 	{
 		rational value;
 		bool fractional = isFractional() || other.isFractional();
+		using boost::multiprecision::pow;
 		switch (_operator)
 		{
 		//bit operations will only be enabled for integers and fixed types that resemble integers
@@ -685,7 +686,6 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 			break;	
 		case Token::Exp:
 		{
-			using boost::multiprecision::pow;
 			if (other.isFractional())
 				return TypePointer();
 			else if (abs(other.m_value) > numeric_limits<uint32_t>::max())
@@ -699,6 +699,24 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 				// invert
 				value = rational(denominator, numerator);
 			break;
+		}
+		case Token::SHL:
+		{
+			if (isFractional() || other.isFractional())
+				return TypePointer();
+			else if (abs(other.m_value) > numeric_limits<uint32_t>::max())
+				return TypePointer();
+			uint32_t exponent = abs(other.m_value).numerator().convert_to<uint32_t>();
+			value = m_value.numerator() * pow(bigint(2), exponent);
+		}
+		case Token::SHR:
+		{
+			if (isFractional() || other.isFractional())
+				return TypePointer();
+			else if (abs(other.m_value) > numeric_limits<uint32_t>::max())
+				return TypePointer();
+			uint32_t exponent = abs(other.m_value).numerator().convert_to<uint32_t>();
+			value = rational(m_value.numerator() / pow(bigint(2), exponent), 1);
 		}
 		default:
 			return TypePointer();
