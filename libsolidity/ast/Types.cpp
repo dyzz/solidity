@@ -639,7 +639,6 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 	{
 		rational value;
 		bool fractional = isFractional() || other.isFractional();
-		using boost::multiprecision::pow;
 		switch (_operator)
 		{
 		//bit operations will only be enabled for integers and fixed types that resemble integers
@@ -686,6 +685,7 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 			break;	
 		case Token::Exp:
 		{
+			using boost::multiprecision::pow;
 			if (other.isFractional())
 				return TypePointer();
 			else if (abs(other.m_value) > numeric_limits<uint32_t>::max())
@@ -702,6 +702,7 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 		}
 		case Token::SHL:
 		{
+			using boost::multiprecision::pow;
 			if (isFractional() || other.isFractional())
 				return TypePointer();
 			else if (abs(other.m_value) > numeric_limits<uint32_t>::max())
@@ -711,6 +712,7 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 		}
 		case Token::SHR:
 		{
+			using boost::multiprecision::pow;
 			if (isFractional() || other.isFractional())
 				return TypePointer();
 			else if (abs(other.m_value) > numeric_limits<uint32_t>::max())
