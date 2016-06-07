@@ -1373,10 +1373,7 @@ void ExpressionCompiler::appendShiftOperatorCode(Token::Value _operator, Type co
 		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::MUL;
 		break;
 	case Token::SAR:
-		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::DIV;
-		if (c_isSigned) {
-			m_context << u256(0) << Instruction::SIGNEXTEND;
-		}
+		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << (c_isSigned ? Instruction::SDIV : Instruction::DIV);
 		break;
 	case Token::SHR:
 		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::DIV;
