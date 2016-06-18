@@ -293,6 +293,12 @@ ASTPointer<FunctionDefinition> Parser::parseFunctionDefinition(ASTString const* 
 		else
 			break;
 	}
+	bool isValueAccepted = false;
+	if (m_scanner->currentToken() == Token::ValueAccepted)
+	{
+	        isValueAccepted = true;
+	        m_scanner->next();
+	}
 	ASTPointer<ParameterList> returnParameters;
 	if (m_scanner->currentToken() == Token::Returns)
 	{
@@ -321,6 +327,7 @@ ASTPointer<FunctionDefinition> Parser::parseFunctionDefinition(ASTString const* 
 		isDeclaredConst,
 		modifiers,
 		returnParameters,
+		isValueAccepted,
 		block
 	);
 }
