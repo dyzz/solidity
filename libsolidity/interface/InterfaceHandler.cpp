@@ -52,6 +52,7 @@ string InterfaceHandler::abiInterface(ContractDefinition const& _contractDef)
 		method["type"] = "function";
 		method["name"] = it.second->declaration().name();
 		method["constant"] = it.second->isConstant();
+		method["acceptvalue"] = it.second->isValueAccepted();
 		method["inputs"] = populateParameters(
 			externalFunctionType->parameterNames(),
 			externalFunctionType->parameterTypeNames(_contractDef.isLibrary())
@@ -72,6 +73,7 @@ string InterfaceHandler::abiInterface(ContractDefinition const& _contractDef)
 			externalFunction->parameterNames(),
 			externalFunction->parameterTypeNames(_contractDef.isLibrary())
 		);
+		method["acceptvalue"] = externalFunction->isValueAccepted();
 		abi.append(method);
 	}
 
