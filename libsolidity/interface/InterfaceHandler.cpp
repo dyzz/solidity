@@ -103,8 +103,14 @@ string InterfaceHandler::abiInterface(ContractDefinition const& _contractDef)
 	}
 
 	Json::FastWriter writer;
+#if JSONCPP_VERSION_HEXA >= 0x700
 	writer.omitEndingLineFeed();
 	return writer.write(abi);
+#else
+	// Remove trailing new line
+	string ret = writer.write(abi);
+	return !ret.empty() ? ret.erase(ret.length() - 1) : ret;
+#endif
 }
 
 string InterfaceHandler::userDocumentation(ContractDefinition const& _contractDef)

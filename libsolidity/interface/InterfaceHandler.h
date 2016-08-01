@@ -29,6 +29,7 @@
 #include <string>
 #include <memory>
 #include <json/json.h>
+#include <json/version.h>
 
 namespace dev
 {
