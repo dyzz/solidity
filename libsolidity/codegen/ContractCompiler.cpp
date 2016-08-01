@@ -243,6 +243,14 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 	if (fallback)
 	{
 		eth::AssemblyItem returnTag = m_context.pushNewTag();
+
+		// Reject transaction if value is not accepted, but was received
+		if (!fallback->isValueAccepted())
+		{
+			m_context << Instruction::CALLVALUE;
+			m_context.appendConditionalJumpTo(m_context.errorTag());
+		}
+
 		fallback->accept(*this);
 		m_context << returnTag;
 		appendReturnValuePacker(FunctionType(*fallback).returnParameterTypes(), _contract.isLibrary());
@@ -258,8 +266,17 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 		FunctionTypePointer const& functionType = it.second;
 		solAssert(functionType->hasDeclaration(), "");
 		CompilerContext::LocationSetter locationSetter(m_context, functionType->declaration());
+
 		m_context << callDataUnpackerEntryPoints.at(it.first);
 		eth::AssemblyItem returnTag = m_context.pushNewTag();
+
+		// Reject transaction if value is not accepted, but was received
+		if (!functionType->isValueAccepted())
+		{
+			m_context << Instruction::CALLVALUE;
+			m_context.appendConditionalJumpTo(m_context.errorTag());
+		}
+
 		m_context << CompilerUtils::dataStartOffset;
 		appendCalldataUnpacker(functionType->parameterTypes());
 		m_context.appendJumpTo(m_context.functionEntryLabel(functionType->declaration()));
