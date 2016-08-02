@@ -1367,6 +1367,11 @@ void ExpressionCompiler::appendBitOperatorCode(Token::Value _operator)
 
 void ExpressionCompiler::appendShiftOperatorCode(Token::Value _operator, bool const _leftSigned)
 {
+	// shift with negative rvalue throws exception
+	// FIXME: include this only for signed rvalues
+	m_context << Instruction::DUP1 << (u256(1) << 255) << Instruction::AND << Instruction::ISZERO << Instruction::ISZERO;
+	m_context.appendConditionalJumpTo(m_context.errorTag());
+
 	switch (_operator)
 	{
 	case Token::SHL:
