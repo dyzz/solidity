@@ -711,6 +711,7 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 				return TypePointer();
 			uint32_t exponent = other.m_value.numerator().convert_to<uint32_t>();
 			value = m_value.numerator() * pow(bigint(2), exponent);
+			break;
 		}
 		case Token::SHR:
 		{
@@ -723,6 +724,7 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 				return TypePointer();
 			uint32_t exponent = other.m_value.numerator().convert_to<uint32_t>();
 			value = rational(m_value.numerator() / pow(bigint(2), exponent), 1);
+			break;
 		}
 		default:
 			return TypePointer();
