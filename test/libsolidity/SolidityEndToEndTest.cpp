@@ -7105,25 +7105,12 @@ BOOST_AUTO_TEST_CASE(shift_right)
        char const* sourceCode = R"(
                contract C {
                        function f(uint a, uint b) returns (uint) {
-                               return a >>> b;
-                       }
-               }
-       )";
-       compileAndRun(sourceCode, 0, "C");
-       BOOST_CHECK(callContractFunction("f(uint256,uint256)", u256(0x4242), u256(0x8)) == encodeArgs(u256(0x42)));
-}
-
-BOOST_AUTO_TEST_CASE(shift_arith_right)
-{
-       char const* sourceCode = R"(
-               contract C {
-                       function f(int a, int b) returns (int) {
                                return a >> b;
                        }
                }
        )";
        compileAndRun(sourceCode, 0, "C");
-       BOOST_CHECK(callContractFunction("f(int256,int256)", u256(-0x4242), u256(0x8)) == encodeArgs(u256(-0x42)));
+       BOOST_CHECK(callContractFunction("f(uint256,uint256)", u256(0x4242), u256(0x8)) == encodeArgs(u256(0x42)));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
