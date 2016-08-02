@@ -245,7 +245,7 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 		eth::AssemblyItem returnTag = m_context.pushNewTag();
 
 		// Reject transaction if value is not accepted, but was received
-		if (!fallback->isValueAccepted())
+		if (!fallback->isPayable())
 		{
 			m_context << Instruction::CALLVALUE;
 			m_context.appendConditionalJumpTo(m_context.errorTag());
@@ -271,7 +271,7 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 		eth::AssemblyItem returnTag = m_context.pushNewTag();
 
 		// Reject transaction if value is not accepted, but was received
-		if (!functionType->isValueAccepted())
+		if (!functionType->isPayable())
 		{
 			m_context << Instruction::CALLVALUE;
 			m_context.appendConditionalJumpTo(m_context.errorTag());

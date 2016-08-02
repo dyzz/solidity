@@ -166,6 +166,7 @@ namespace solidity
 	K(Memory, "memory", 0)                                             \
 	K(Modifier, "modifier", 0)                                         \
 	K(New, "new", 0)                                                   \
+	K(Payable, "payable", 0)                                           \
 	K(Public, "public", 0)                                             \
 	K(Private, "private", 0)                                           \
 	K(Return, "return", 0)                                             \
@@ -174,7 +175,7 @@ namespace solidity
 	K(Struct, "struct", 0)                                             \
 	K(Throw, "throw", 0)                                               \
 	K(Using, "using", 0)                                               \
-	K(Var, "var", 0)                                                   \
+9	K(Var, "var", 0)                                                   \
 	K(While, "while", 0)                                               \
 	\
 	/* Ether subdenominations */                                       \
