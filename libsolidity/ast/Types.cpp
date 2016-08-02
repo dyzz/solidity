@@ -710,6 +710,11 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 			else if (other.m_value > numeric_limits<uint32_t>::max())
 				return TypePointer();
 			uint32_t exponent = other.m_value.numerator().convert_to<uint32_t>();
+			// shortcut
+			if (exponent > 256) {
+				value = 0;
+				break;
+			}
 			value = m_value.numerator() * pow(bigint(2), exponent);
 			break;
 		}
@@ -723,6 +728,11 @@ TypePointer RationalNumberType::binaryOperatorResult(Token::Value _operator, Typ
 			else if (other.m_value > numeric_limits<uint32_t>::max())
 				return TypePointer();
 			uint32_t exponent = other.m_value.numerator().convert_to<uint32_t>();
+			// shortcut
+			if (exponent > 256) {
+				value = 0;
+				break;
+			}
 			value = rational(m_value.numerator() / pow(bigint(2), exponent), 1);
 			break;
 		}
