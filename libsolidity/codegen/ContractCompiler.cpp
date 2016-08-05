@@ -243,14 +243,6 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 	if (fallback)
 	{
 		eth::AssemblyItem returnTag = m_context.pushNewTag();
-
-		// Reject transaction if value is not accepted, but was received
-		if (!fallback->isPayable())
-		{
-			m_context << Instruction::CALLVALUE;
-			m_context.appendConditionalJumpTo(m_context.errorTag());
-		}
-
 		fallback->accept(*this);
 		m_context << returnTag;
 		appendReturnValuePacker(FunctionType(*fallback).returnParameterTypes(), _contract.isLibrary());
@@ -269,14 +261,6 @@ void ContractCompiler::appendFunctionSelector(ContractDefinition const& _contrac
 
 		m_context << callDataUnpackerEntryPoints.at(it.first);
 		eth::AssemblyItem returnTag = m_context.pushNewTag();
-
-		// Reject transaction if value is not accepted, but was received
-		if (!functionType->isPayable())
-		{
-			m_context << Instruction::CALLVALUE;
-			m_context.appendConditionalJumpTo(m_context.errorTag());
-		}
-
 		m_context << CompilerUtils::dataStartOffset;
 		appendCalldataUnpacker(functionType->parameterTypes());
 		m_context.appendJumpTo(m_context.functionEntryLabel(functionType->declaration()));
@@ -425,6 +409,13 @@ bool ContractCompiler::visit(FunctionDefinition const& _function)
 	CompilerContext::LocationSetter locationSetter(m_context, _function);
 
 	m_context.startFunction(_function);
+
+	// Reject transaction if value is not accepted, but was received
+	if (!_function.isPayable())
+	{
+		m_context << Instruction::CALLVALUE;
+		m_context.appendConditionalJumpTo(m_context.errorTag());
+	}
 
 	// stack upon entry: [return address] [arg0] [arg1] ... [argn]
 	// reserve additional slots: [retarg0] ... [retargm] [localvar0] ... [localvarp]
