@@ -1378,7 +1378,7 @@ void ExpressionCompiler::appendShiftOperatorCode(Token::Value _operator, bool co
 		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::MUL;
 		break;
 	case Token::SAR:
-		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << (_leftSigned ? Instruction::SDIV : Instruction::DIV);
+		m_context << Instruction::SWAP1 << u256(2) << Instruction::EXP << Instruction::SWAP1 << (_leftSigned ? Instruction::SDIV : Instruction::DIV);
 		break;
 	case Token::SHR:
 		// This is the >>> operator, which we disable here.
