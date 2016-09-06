@@ -3882,6 +3882,16 @@ BOOST_AUTO_TEST_CASE(constant_constructor)
 	BOOST_CHECK(expectError(text, true) == Error::Type::SyntaxError);
 }
 
+BOOST_AUTO_TEST_CASE(external_constructor)
+{
+	char const* text = R"(
+		contract test {
+			function test() external {}
+		}
+	)";
+	BOOST_CHECK(expectError(text, true) == Error::Type::SyntaxError);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()
 
